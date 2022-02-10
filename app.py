@@ -12,34 +12,24 @@ df = px.data.tips()
 app = dash.Dash()
 auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
 server = app.server
- 
 app.layout = html.Div([
-    html.H1("JupyterDash Demo"),
-    dcc.Graph(id='graph'),
-    html.Label([
-        "colorscale",
-        dcc.Dropdown(
-            id='colorscale-dropdown', clearable=False,
-            value='plasma', options=[
-                {'label': c, 'value': c}
-                for c in px.colors.named_colorscales()
-            ])
-    ]),
+    dcc.Dropdown(
+        id="dropdown",
+        options=[{"label": x, "value": x} for x in days],
+        value=days[0],
+        clearable=False,
+    ),
+    dcc.Graph(id="bar-chart"),
 ])
-# Define callback to update graph
+
 @app.callback(
-    Output('graph', 'figure'),
-    [Input("colorscale-dropdown", "value")]
-)
-def update_figure(colorscale):
-    return px.scatter(
-        df, x="total_bill", y="tip", color="size",
-        color_continuous_scale=colorscale,
-        render_mode="webgl", title="Tips"
-    )
+    Output("bar-chart", "figure"), 
+    [Input("dropdown", "value")])
+def update_bar_chart(day):
+    mask = df["day"] == day
+    fig = px.bar(df[mask], x="sex", y="total_bill", 
+                 color="smoker", barmode="group")
+    return fig
  
 if __name__ == '__main__':
     app.run_server(debug=True)
-
-
-

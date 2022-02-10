@@ -1,36 +1,33 @@
+import dash
+import dash_auth
+import dash_core_components as dcc
+import dash_html_components as html
+from dash.dependencies import Input, Output
+ 
+USERNAME_PASSWORD_PAIRS = [
+    ['DRS', '12345'],['LouisArmstrong', 'satchmo']
+]
+ 
 app = dash.Dash()
-colors = {
-    'background': '#111111',
-    'text': '#7FDBFF'
-}
-app.layout = html.Div(style={'backgroundColor': colors['background']}, children=[
-    html.H1(
-        children='Hello Dash',
-        style={
-            'textAlign': 'center',
-            'color': colors['text']
-        }
+auth = dash_auth.BasicAuth(app,USERNAME_PASSWORD_PAIRS)
+server = app.server
+ 
+app.layout = html.Div([
+    dcc.RangeSlider(
+        id='range-slider',
+        min=-5,
+        max=6,
+        marks={i:str(i) for i in range(-5, 7)},
+        value=[-3, 4]
     ),
-    html.Div(children='Dash: A web application framework for Python.', style={
-        'textAlign': 'center',
-        'color': colors['text']
-    }),
-    dcc.Graph(
-        id='Graph1',
-        figure={
-            'data': [
-                {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'bar', 'name': 'SF'},
-                {'x': [1, 2, 3], 'y': [2, 4, 5], 'type': 'bar', 'name': u'Montréal'},
-            ],
-            'layout': {
-                'plot_bgcolor': colors['background'],
-                'paper_bgcolor': colors['background'],
-                'font': {
-                    'color': colors['text']
-                }
-            }
-        }
-    )
-])
+    html.H1(id='product')  # this is the output
+], style={'width':'50%'})
+ 
+@app.callback(
+    Output('product', 'children'),
+    [Input('range-slider', 'value')])
+def update_value(value_list):
+    return value_list[0]*value_list[1]
+ 
 if __name__ == '__main__':
     app.run_server(debug=True)

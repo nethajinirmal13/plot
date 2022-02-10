@@ -34,14 +34,15 @@ if __name__ == '__main__':
 
 
 import plotly.express as px
-from jupyter_dash import JupyterDash
+import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 # Load Data
 df = px.data.tips()
 # Build App
-app = JupyterDash(__name__)
+#app = JupyterDash(__name__)
+app = dash.Dash()
 server = app.server
 app.layout = html.Div([
     html.H1("JupyterDash Demo"),

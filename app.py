@@ -7,6 +7,7 @@ import plotly.express as px
 df = px.data.iris()
 
 app = dash.Dash(__name__)
+server=app.server
 
 app.layout = html.Div([
     dcc.Graph(id="scatter-plot"),

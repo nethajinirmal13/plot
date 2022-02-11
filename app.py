@@ -34,4 +34,4 @@ def update_bar_chart(slider_range):
         hover_data=['petal_width'])
     return fig
 
-app.run_server(debud=True)
+app.run_server(mode="external")

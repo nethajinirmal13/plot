@@ -1,37 +1,30 @@
-#from jupyter_dash import JupyterDash
+import os
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
-import plotly.express as px
 
-df = px.data.iris()
 
 app = dash.Dash(__name__)
-#app = JupyterDash(__name__)
 server = app.server
 
+
 app.layout = html.Div([
-    dcc.Graph(id="scatter-plot"),
-    html.P("Petal Width:"),
-    dcc.RangeSlider(
-        id='range-slider',
-        min=0, max=2.5, step=0.1,
-        marks={0: '0', 2.5: '2.5'},
-        value=[0.5, 2]
+    html.H2('Hello World'),
+    dcc.Dropdown(
+        id='dropdown',
+        options=[{'label': i, 'value': i} for i in ['LA', 'NYC', 'MTL']],
+        value='LA'
     ),
+    html.Div(id='display-value')
 ])
 
-@app.callback(
-    Output("scatter-plot", "figure"), 
-    [Input("range-slider", "value")])
-def update_bar_chart(slider_range):
-    low, high = slider_range
-    mask = (df['petal_width'] > low) & (df['petal_width'] < high)
-    fig = px.scatter(
-        df[mask], x="sepal_width", y="sepal_length", 
-        color="species", size='petal_length', 
-        hover_data=['petal_width'])
-    return fig
+app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
 
-app.run_server(debug=True)
+
+@app.callback(dash.dependencies.Output('display-value', 'children'), [dash.dependencies.Input('dropdown', 'value')])
+def display_value(value):
+    return 'You have selected "{}"'.format(value)
+
+
+if __name__ == '__main__':
+    app.run_server(debug=True)

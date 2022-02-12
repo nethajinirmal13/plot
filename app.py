@@ -24,7 +24,6 @@ def generate_table(dataframe, max_rows=100):
     ])
 
 
-app = JupyterDash(__name__)
 
 app.layout = html.Div([
     html.H4(children='US Agriculture Exports (2011)'),

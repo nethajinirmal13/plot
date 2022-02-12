@@ -4,6 +4,7 @@ certifi
 chardet
 click
 dash
+dash-bio
 dash-core-components
 dash-html-components
 dash-table

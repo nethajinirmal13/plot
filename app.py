@@ -8,31 +8,27 @@ import pandas as pd
 
 app = dash.Dash(__name__)
 server = app.server
+df = pd.read_csv('https://raw.githubusercontent.com/nethajinirmal13/Training-datasets/main/usa-agricultural-exports-2011.csv')
 
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["a", "a", "a", "b", "c", "d"]
-})
 
-fig = px.line(df, x="Fruit",y="Amount")
+def generate_table(dataframe, max_rows=100):
+    return html.Table([
+        html.Thead(
+            html.Tr([html.Th(col) for col in dataframe.columns])
+        ),
+        html.Tbody([
+            html.Tr([
+                html.Td(dataframe.iloc[i][col]) for col in dataframe.columns
+            ]) for i in range(min(len(dataframe), max_rows))
+        ])
+    ])
 
-app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
 
-    html.Div(children='''
-        Dash: A web application framework for your data.
-    '''),
+app = JupyterDash(__name__)
 
-    dcc.Graph(
-        id='example-graph',
-        figure=fig
-    ),
-
-    dcc.Graph(
-        id='example-graph1',
-        figure=fig
-    )
+app.layout = html.Div([
+    html.H4(children='US Agriculture Exports (2011)'),
+    generate_table(df)
 ])
 
 
